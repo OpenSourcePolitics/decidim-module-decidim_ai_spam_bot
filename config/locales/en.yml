@@ -1,0 +1,6 @@
+---
+en:
+  decidim:
+    components:
+      decidim_ai_spam_bot:
+        name: DecidimAiSpamBot
