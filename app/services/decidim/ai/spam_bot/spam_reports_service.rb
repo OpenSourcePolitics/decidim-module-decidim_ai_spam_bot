@@ -8,7 +8,20 @@ module Decidim
         # call Decidim::Admin::BlockUser
 
         # methode call
-        # methode users_to_block
+        # user_to_block ietration on block la moderation
+
+        def call
+          user_to_block.find_each do |user|
+            Decidim::Admin::BlockUser.call(
+              Decidim::Admin::BlockUsersForm.form_params(
+                user_id: user.id,
+                justification: "Automatic block fro AI spam report",
+                hide: false,
+                current_user: system_user
+              )
+            )
+          end
+        end
 
         def user_to_block
           Decidim::User
