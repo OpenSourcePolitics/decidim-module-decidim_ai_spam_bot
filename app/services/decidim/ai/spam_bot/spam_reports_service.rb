@@ -1,25 +1,11 @@
 module Decidim
-  module AI
+  module Ai
     module SpamBot
       class SpamReportsService
-        # def call
-        # definir spam_user =
-        # itérer sur user exept user = user.deja blocked, user.admin
-        # call Decidim::Admin::BlockUser
 
-        # methode call
-        # user_to_block ietration on block la moderation
-
-        def call
+        def call # orchestre
           user_to_block.find_each do |user|
-            Decidim::Admin::BlockUser.call(
-              Decidim::Admin::BlockUsersForm.form_params(
-                user_id: user.id,
-                justification: "Automatic block fro AI spam report",
-                hide: false,
-                current_user: system_user
-              )
-            )
+            block_user(user)
           end
         end
 
@@ -32,30 +18,27 @@ module Decidim
             .where(blocked: false)
             .distinct
         end
-        #   Sélectionner les users :
-        #   ayant au moins un UserReport
-        #   avec reason = "spam"
-        #   Exclure :
-        #   users déjà bloqués
-        #   admins
-        #   users supprimés (deleted_at présent)
-        #   Retourner une liste distincte de users
-        #
-        # methode block_user
 
-        #   Construire un BlockUserForm avec :
-        #   users_to_block
-        #   current_user = system_user
-        #   justification automatique
-        #   hide = true (ou false selon choix V0)
-        #    Exécuter la command Decidim::Admin::BlockUser
+        def block_user(user)
+          form = Decidim::Admin::BlockUserForm.from_params(
+            {
+              user_id: user.id,
+              justification: "Automatic block from AI spam report",
+              hide: false
+            },
+            {
+              current_user: system_user,
+              current_organization: user.organization
+            }
+          )
+          Decidim::Admin::BlockUser.call(form)
+        end
 
-        #
-        # methode build_block_form
-        #
-        # methode system_user
-        #
-
+        def system_user
+          @system_user ||= Decidim::UserBaseEntity.find_by!(
+            email:ENV['DECIDIM_AI_REPORTING_USER_EMAIL']
+          )
+        end
       end
     end
   end
