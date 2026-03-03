@@ -20,16 +20,16 @@ module Decidim
         end
 
         def block_user(user)
-          form = Decidim::Admin::BlockUserForm.new(
-
+          form = Decidim::Admin::BlockUserForm
+            .from_params(
               user_id: user.id,
-              justification: "Automatic block from AI spam report",
+              justification: "Automatic block from manual and AI spam reports",
               hide: false
-          )
-
-          form.current_user = system_user,
-          form.current_organization = user.organization
-
+            )
+            .with_context(
+              current_user: system_user,
+              current_organization: user.organization
+            )
           Decidim::Admin::BlockUser.call(form)
         end
 
