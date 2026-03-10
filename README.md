@@ -1,11 +1,18 @@
 # Decidim::DecidimAiSpamBot
 
-decidim ai spam bot.
+Automated spam moderation module for Decidim. Blocks spam users and hides spam resources based on AI detection (decidim-ai) and manual reports.
 
 ## Usage
 
 DecidimAiSpamBot will be available as a Component for a Participatory
 Space.
+
+## Features
+
+- Automatic blocking of users flagged as spam (AI or manual reports)
+- Automatic hiding of spam resources (proposals, comments, debates...)
+- Nightly scheduled job via Sidekiq-cron
+- Full traceability (PaperTrail + action logs)
 
 ## Installation
 
@@ -20,6 +27,22 @@ And then execute:
 ```bash
 bundle
 ```
+
+## Configuration
+
+### Sidekiq
+
+Add the scheduler configuration to your `config/sidekiq.yml`.
+See `config/sidekiq.yml.example` for the recommended configuration.
+
+### Rake task (manual run)
+```bash
+bundle exec rake decidim_ai_spam_bot:block_spam_job
+```
+
+## Requirements
+
+- [decidim-ai](https://github.com/OpenSourcePolitics/decidim-module-ai) must be installed and configured, , including `DECIDIM_AI_REPORTING_USER_EMAIL`.
 
 ## Contributing
 
