@@ -33,6 +33,21 @@ module Decidim
           Decidim::Admin::BlockUser.call(form)
         end
 
+        def spam_resources
+          Decidim::Moderation
+            .joins(:reports)
+            .where(decidim_reports: { reason: "spam" })
+            .where(hidden_at: nil)
+        end
+
+        def hide_spam_resources
+          spam_resources.find_each do |moderation|
+            reportable = moderation.reportable
+            next if reportable.nil?
+            Decidim::Admin::HideResource.new(reportable, current_user, with_admin_log: false).call
+          end
+        end
+
         def system_user
           @system_user ||= Decidim::UserBaseEntity.find_by!(
             email:ENV['DECIDIM_AI_REPORTING_USER_EMAIL']
