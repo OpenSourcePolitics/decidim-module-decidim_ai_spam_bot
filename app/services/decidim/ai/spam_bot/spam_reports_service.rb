@@ -4,12 +4,11 @@ module Decidim
       class SpamReportsService
 
         def call # orchestre
-          user_to_block.find_each do |user|
-            block_user(user)
-          end
+          block_spam_users
+          hide_spam_resources
         end
 
-        def user_to_block
+        def spam_users
           Decidim::User
             .joins(:user_reports)
             .where(decidim_user_reports: {reason: "spam"})
@@ -19,18 +18,20 @@ module Decidim
             .distinct
         end
 
-        def block_user(user)
-          form = Decidim::Admin::BlockUserForm
-            .from_params(
-              user_id: user.id,
-              justification: "Automatic block from manual and AI spam reports",
-              hide: false
-            )
-            .with_context(
-              current_user: system_user,
-              current_organization: user.organization
-            )
-          Decidim::Admin::BlockUser.call(form)
+        def block_spam_users
+          spam_users.find_each do |user|
+            form = Decidim::Admin::BlockUserForm
+                     .from_params(
+                       user_id: user.id,
+                       justification: "Automatic block from manual and AI spam reports",
+                       hide: false
+                     )
+                     .with_context(
+                       current_user: system_user,
+                       current_organization: user.organization
+                     )
+            Decidim::Admin::BlockUser.call(form)
+          end
         end
 
         def spam_resources
