@@ -44,7 +44,7 @@ module Decidim
           spam_resources.find_each do |moderation|
             reportable = moderation.reportable
             next if reportable.nil?
-            Decidim::Admin::HideResource.new(reportable, current_user, with_admin_log: false).call
+            Decidim::Admin::HideResource.new(reportable, system_user, with_admin_log: false).call
           end
         end
 
