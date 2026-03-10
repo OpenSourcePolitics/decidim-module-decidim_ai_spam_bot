@@ -1,9 +1,10 @@
+# frozen_string_literal: true
+
 module Decidim
   module Ai
     module SpamBot
       class SpamReportsService
-
-        def call # orchestre
+        def call
           block_spam_users
           hide_spam_resources
         end
@@ -11,7 +12,7 @@ module Decidim
         def spam_users
           Decidim::User
             .joins(:user_reports)
-            .where(decidim_user_reports: {reason: "spam"})
+            .where(decidim_user_reports: { reason: "spam" })
             .where(admin: false)
             .where(deleted_at: nil)
             .where(blocked: false)
@@ -21,15 +22,15 @@ module Decidim
         def block_spam_users
           spam_users.find_each do |user|
             form = Decidim::Admin::BlockUserForm
-                     .from_params(
-                       user_id: user.id,
-                       justification: "Automatic block from manual and AI spam reports",
-                       hide: false
-                     )
-                     .with_context(
-                       current_user: system_user,
-                       current_organization: user.organization
-                     )
+                   .from_params(
+                     user_id: user.id,
+                     justification: "Automatic block from manual and AI spam reports",
+                     hide: false
+                   )
+                   .with_context(
+                     current_user: system_user,
+                     current_organization: user.organization
+                   )
             Decidim::Admin::BlockUser.call(form)
           end
         end
@@ -45,13 +46,14 @@ module Decidim
           spam_resources.find_each do |moderation|
             reportable = moderation.reportable
             next if reportable.nil?
+
             Decidim::Admin::HideResource.new(reportable, system_user, with_admin_log: false).call
           end
         end
 
         def system_user
           @system_user ||= Decidim::UserBaseEntity.find_by!(
-            email:ENV['DECIDIM_AI_REPORTING_USER_EMAIL']
+            email: ENV["DECIDIM_AI_REPORTING_USER_EMAIL"]
           )
         end
       end
