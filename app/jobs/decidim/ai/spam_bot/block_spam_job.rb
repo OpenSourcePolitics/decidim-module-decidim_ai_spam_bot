@@ -1,7 +1,7 @@
 module Decidim
   module Ai
     module SpamBot
-      class BlockSpamUsersJob < ApplicationJob
+      class BlockSpamJob < ApplicationJob
         queue_as :default
 
         def perform
