@@ -47,8 +47,14 @@ module Decidim
             .joins(:reports)
             .where(decidim_reports: { reason: "spam" })
             .where(hidden_at: nil)
+            .where.not(id: manually_unhidden_resource_ids)
         end
 
+        def manually_unhidden_resource_ids
+          Decidim::ActionLog
+            .where(action: "unhide", resource_type: "Decidim::Moderation")
+            .pluck(:resource_id)
+        end
         def hide_spam_resources
           spam_resources.find_each do |moderation|
             reportable = moderation.reportable
