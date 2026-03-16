@@ -16,7 +16,14 @@ module Decidim
             .where(admin: false)
             .where(deleted_at: nil)
             .where(blocked: false)
+            .where.not(id: manually_unblocked_user_ids)
             .distinct
+        end
+
+        def manually_unblocked_user_ids
+          Decidim::ActionLog
+            .where(action: "unblock", resource_type: "Decidim::User")
+            .pluck(:resource_id)
         end
 
         def block_spam_users

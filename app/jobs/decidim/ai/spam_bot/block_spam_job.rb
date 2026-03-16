@@ -15,7 +15,7 @@ module Decidim
         private
 
         def decidim_ai_enabled?
-          Rails.application.secrets.dig(:decidim, :ai, :enabled) == true
+          ENV.fetch("DECIDIM_AI_ENABLED", "true") == "true"
         end
       end
     end
