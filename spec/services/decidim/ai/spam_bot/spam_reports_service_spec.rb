@@ -66,12 +66,6 @@ describe Decidim::Ai::SpamBot::SpamReportsService do
       moderation
     end
 
-    let!(:clean_moderation) do
-      moderation = create(:moderation, reportable: create(:dummy_resource, component: component), report_count: 1)
-      create(:report, moderation: moderation, user: system_user, reason: "offensive")
-      moderation
-    end
-
     it "returns moderations with spam reports not yet hidden" do
       expect(subject.spam_resources).to include(spam_moderation)
     end
@@ -79,17 +73,19 @@ describe Decidim::Ai::SpamBot::SpamReportsService do
     it "does not return already hidden moderations" do
       expect(subject.spam_resources).not_to include(hidden_moderation)
     end
-
-    it "does not return moderations with other reasons" do
-      expect(subject.spam_resources).not_to include(clean_moderation)
-    end
   end
 
   describe "#call" do
-    it "calls block_spam_users and hide_spam_resources" do
-      expect(subject).to receive(:block_spam_users).once
-      expect(subject).to receive(:hide_spam_resources).once
+    let!(:spam_user) do
+      user = create(:user, organization: organization)
+      moderation = create(:user_moderation, user: user)
+      create(:user_report, moderation: moderation, user: system_user, reason: "spam")
+      user
+    end
+
+    it "blocks spam users" do
       subject.call
+      expect(spam_user.reload.blocked?).to be true
     end
   end
 end

@@ -55,6 +55,7 @@ module Decidim
             .where(action: "unhide", resource_type: "Decidim::Moderation")
             .pluck(:resource_id)
         end
+
         def hide_spam_resources
           spam_resources.find_each do |moderation|
             reportable = moderation.reportable
@@ -66,7 +67,7 @@ module Decidim
 
         def system_user
           @system_user ||= Decidim::UserBaseEntity.find_by!(
-            email: ENV["DECIDIM_AI_REPORTING_USER_EMAIL"]
+            email: ENV.fetch("DECIDIM_AI_REPORTING_USER_EMAIL", nil)
           )
         end
       end
