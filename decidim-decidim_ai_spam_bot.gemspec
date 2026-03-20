@@ -7,7 +7,7 @@ require "decidim/decidim_ai_spam_bot/version"
 Gem::Specification.new do |s|
   s.version = Decidim::DecidimAiSpamBot.version
   s.authors = ["barbara oliveira"]
-  s.email = ["barbara@opensourcepolitics.eu"]
+  s.email = ["oliveirabarbarapro@gmail.com"]
   s.license = "AGPL-3.0-or-later"
   s.homepage = "https://decidim.org"
   s.metadata = {
@@ -30,5 +30,5 @@ Gem::Specification.new do |s|
     end
   end
 
-  s.add_dependency "decidim-core", Decidim::DecidimAiSpamBot.version
+  s.add_dependency "decidim-core", Decidim::DecidimAiSpamBot.decidim_version
 end
