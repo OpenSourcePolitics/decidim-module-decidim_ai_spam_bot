@@ -55,7 +55,7 @@ module Decidim
             .where(action: "unhide", resource_type: "Decidim::Moderation")
             .pluck(:resource_id)
         end
-        
+
         def hide_spam_resources
           spam_resources.find_each do |moderation|
             reportable = moderation.reportable
