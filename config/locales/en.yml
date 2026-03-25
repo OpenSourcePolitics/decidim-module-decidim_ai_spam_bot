@@ -4,3 +4,7 @@ en:
     components:
       decidim_ai_spam_bot:
         name: DecidimAiSpamBot
+  ai:
+    spam_bot:
+      block_user:
+        justification: "Automatic block from manual and AI spam reports"

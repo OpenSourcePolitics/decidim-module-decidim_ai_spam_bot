@@ -31,7 +31,7 @@ module Decidim
             form = Decidim::Admin::BlockUserForm
                    .from_params(
                      user_id: user.id,
-                     justification: "Automatic block from manual and AI spam reports",
+                     justification: I18n.t("decidim.ai.spam_bot.block_user.justification"),
                      hide: false
                    )
                    .with_context(
