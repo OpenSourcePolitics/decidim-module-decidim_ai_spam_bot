@@ -4,7 +4,7 @@ source "https://rubygems.org"
 
 ruby RUBY_VERSION
 
-gem "decidim", "~> 0.31"
+gem "decidim", "~> 0.29"
 gem "decidim-decidim_ai_spam_bot", path: "."
 
 gem "bootsnap", "~> 1.4"
