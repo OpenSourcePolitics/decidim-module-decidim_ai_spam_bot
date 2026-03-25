@@ -15,7 +15,7 @@ module Decidim
         private
 
         def decidim_ai_enabled?
-          ENV.fetch("DECIDIM_AI_ENABLED", "true") == "true"
+          ENV.fetch("DECIDIM_AI_ENABLED", "false") == "true"
         end
       end
     end
