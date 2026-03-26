@@ -11,7 +11,7 @@ describe Decidim::Ai::SpamBot::SpamReportsService do
 
   before do
     allow(ENV).to receive(:[]).and_call_original
-    allow(ENV).to receive(:[]).with("DECIDIM_AI_REPORTING_USER_EMAIL", nil).and_return(reporting_user_email)
+    allow(ENV).to receive(:[]).with("DECIDIM_AI_REPORTING_USER_EMAIL").and_return(reporting_user_email)
     allow(ENV).to receive(:[]).with("DECIDIM_AI_ENABLED", "false").and_return("true")
   end
 
