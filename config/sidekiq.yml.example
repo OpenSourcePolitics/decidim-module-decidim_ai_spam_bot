@@ -1,0 +1,9 @@
+# Copy this configuration to your application's config/sidekiq.yml
+# and merge it with your existing configuration.
+
+:scheduler:
+  :schedule:
+    BlockSpam:
+      cron: "0 2 * * *"
+      class: Decidim::Ai::SpamBot::BlockSpamJob
+      queue: default
