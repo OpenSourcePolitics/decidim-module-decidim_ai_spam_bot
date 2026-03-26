@@ -67,7 +67,7 @@ module Decidim
 
         def system_user
           @system_user ||= Decidim::UserBaseEntity.find_by!(
-            email: ENV["DECIDIM_AI_REPORTING_USER_EMAIL"]
+            email: ENV.fetch["DECIDIM_AI_REPORTING_USER_EMAIL"]
           )
         end
       end
