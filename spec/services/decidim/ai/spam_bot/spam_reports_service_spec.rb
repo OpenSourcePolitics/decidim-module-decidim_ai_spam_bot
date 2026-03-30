@@ -83,9 +83,21 @@ describe Decidim::Ai::SpamBot::SpamReportsService do
       user
     end
 
+    let!(:component) { create(:component, organization: organization) }
+    let!(:spam_moderation) do
+      moderation = create(:moderation, reportable: create(:dummy_resource, component: component), report_count: 1)
+      create(:report, moderation: moderation, user: system_user, reason: "spam")
+      moderation
+    end
+
     it "blocks spam users" do
       subject.call
       expect(spam_user.reload.blocked?).to be true
+    end
+
+    it "hides spam resources" do
+      subject.call
+      expect(spam_moderation.reload.hidden_at).not_to be_nil
     end
   end
 end
