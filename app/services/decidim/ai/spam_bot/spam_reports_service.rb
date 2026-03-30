@@ -61,7 +61,7 @@ module Decidim
             reportable = moderation.reportable
             next if reportable.nil?
 
-            Decidim::Admin::HideResource.new(reportable, system_user, with_admin_log: false).call
+            Decidim::Admin::HideResource.new(reportable, system_user).call
           end
         end
 
