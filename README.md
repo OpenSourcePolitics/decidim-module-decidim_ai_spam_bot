@@ -13,6 +13,7 @@ Space.
 - Automatic hiding of spam resources (proposals, comments, debates...)
 - Nightly scheduled job via Sidekiq-cron
 - Full traceability (PaperTrail + action logs)
+- Anti-regression: If an admin manually unblocks a user or unhides a resource, the job will **not** re-block or re-hide them on the next run. This is handled by checking `decidim_action_logs` for `unblock` and `unhide` actions before processing.
 
 ## Installation
 
